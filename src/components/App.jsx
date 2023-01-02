@@ -23,7 +23,6 @@ export const App = () => {
 
   useEffect(() => {
     localStorage.setItem('contacts', JSON.stringify(contacts));
-    console.log('обновились контакты' + Date.now());
   }, [contacts]);
 
   const deleteContact = index => {
