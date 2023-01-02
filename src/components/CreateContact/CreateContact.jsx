@@ -1,8 +1,7 @@
-import React, { Component } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Box } from '../Box';
 import { EnterLabel, EnterInput, StyledButton } from '../App.styled';
-import { useState } from 'react';
 
 const CreateContact = ({ onSubmit }) => {
   const [name, setName] = useState('');
@@ -55,8 +54,8 @@ const CreateContact = ({ onSubmit }) => {
 };
 
 CreateContact.propTypes = {
-  name: PropTypes.string.isRequired,
-  number: PropTypes.string.isRequired,
+  name: PropTypes.string,
+  number: PropTypes.string,
 };
 
 export default CreateContact;

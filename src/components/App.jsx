@@ -15,21 +15,19 @@ export const App = () => {
   const [filter, setFilter] = useState('');
 
   useEffect(() => {
-    const parsedCcontacts = JSON.parse(localStorage.getItem('contacts'));
-    if (parsedCcontacts) {
-      setContacts(parsedCcontacts);
+    const parsedContacts = JSON.parse(localStorage.getItem('contacts'));
+    if (parsedContacts) {
+      setContacts(parsedContacts);
     }
   }, []);
 
   useEffect(() => {
     localStorage.setItem('contacts', JSON.stringify(contacts));
+    console.log('обновились контакты' + Date.now());
   }, [contacts]);
 
   const deleteContact = index => {
-    console.log('-> worked deleteContact');
-    setContacts(prevContacts => {
-      prevContacts.filter(contact => contact.id !== index);
-    });
+    setContacts([...contacts].filter(contact => contact.id !== index));
   };
 
   const addContact = (name, number) => {
@@ -42,19 +40,19 @@ export const App = () => {
     if (contacts.find(findContact => findContact.name === newContact.name)) {
       alert(`${newContact.name} is already in contacts`);
     } else {
-      setContacts(prevContacts => [...prevContacts, newContact]);
+      setContacts([newContact, ...contacts]);
     }
   };
 
   const changeFilter = e => {
-    console.log('-> worked changeFilter');
-
     setFilter(e.target.value);
   };
 
   const normalizeFilter = filter.toLowerCase();
-  const filteredContacts = contacts.filter(contact =>
-    contact.name.toLowerCase().includes(normalizeFilter)
+  const filteredContacts = contacts.filter(
+    contact =>
+      contact.name.toLowerCase().includes(normalizeFilter) ||
+      contact.number.includes(normalizeFilter)
   );
 
   return (
@@ -64,14 +62,28 @@ export const App = () => {
 
       <Title>Contacts</Title>
       <Filter value={filter} onChangeFilter={changeFilter} />
-      <ContactList
-        contacts={filteredContacts}
-        onDeleteContact={deleteContact}
-      />
+
+      {contacts.length > 0 && (
+        <ContactList
+          contacts={filteredContacts}
+          onDeleteContact={deleteContact}
+        />
+      )}
 
       <GlobalStyle />
     </Box>
   );
+};
+
+App.propTypes = {
+  contacts: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+      number: PropTypes.string.isRequired,
+    })
+  ),
+  filter: PropTypes.string,
 };
 // export class App extends Component {
 //   static propTypes = {
